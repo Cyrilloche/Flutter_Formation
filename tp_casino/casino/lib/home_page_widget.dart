@@ -41,6 +41,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text("Casino"),
         titleTextStyle: const TextStyle(
           fontSize: 40,
