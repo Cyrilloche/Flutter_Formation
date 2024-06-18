@@ -12,6 +12,7 @@ class PizzasMaster extends StatelessWidget {
       title: 'EasyPizza',
       home: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text('Pizza della mama'),
         ),
         body: Center(
@@ -19,10 +20,14 @@ class PizzasMaster extends StatelessWidget {
             itemCount: db.pizzas.length,
             itemBuilder: (BuildContext context, int index) {
               final Pizza currentPizza = db.pizzas[index];
+              final String currentId = index.toString();
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                  onTap: () => context.go('pizza/$index'),
+                  onTap: () => context.goNamed(
+                    'details',
+                    pathParameters: {'id': currentId},
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -44,7 +49,7 @@ class PizzasMaster extends StatelessWidget {
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '${currentPizza.ingredients.length.toString()} ingrédients',
+                              '${currentPizza.ingredients.length} ${currentPizza.ingredients.length > 1 ? 'ingredienti' : 'ingrediente'}',
                               style: const TextStyle(
                                   fontSize: 14, fontStyle: FontStyle.italic),
                             ),

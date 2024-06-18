@@ -5,15 +5,37 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:easypizza/screens/pizza_details.dart';
+import 'package:easypizza/screens/pizzas_master.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:easypizza/main.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
+  final GoRouter router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return const PizzasMaster();
+        },
+      ),
+      GoRoute(
+        name: 'details',
+        path: '/pizza/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return PizzaDetails(id: id);
+        },
+      )
+    ],
+  );
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(router: router));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -8,16 +8,17 @@ void main() {
     initialLocation: '/',
     routes: [
       GoRoute(
+        name: 'menu',
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
           return const PizzasMaster();
         },
       ),
       GoRoute(
-        name: 'pizza',
+        name: 'details',
         path: '/pizza/:id',
         builder: (context, state) {
-          final id = state.pathParameters['id'];
+          final id = state.pathParameters['id']!;
           return PizzaDetails(id: id);
         },
       )
