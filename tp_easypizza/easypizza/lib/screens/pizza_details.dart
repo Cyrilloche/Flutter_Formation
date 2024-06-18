@@ -1,7 +1,9 @@
+import 'package:easypizza/classes/likes_provider.dart';
 import 'package:easypizza/models/pizza.dart';
 import 'package:flutter/material.dart';
 import 'package:easypizza/data/pizzas.dart' as db;
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class PizzaDetails extends StatelessWidget {
   const PizzaDetails({super.key, required this.id});
@@ -12,9 +14,15 @@ class PizzaDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentIndex = int.parse(id);
     final Pizza currentPizza = db.pizzas[currentIndex];
+    final likes = context.watch<LikesProvider>();
+    final Color colorLike =
+        likes.isLiked(currentPizza) ? Colors.red : Colors.grey;
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          title: Text(currentPizza.name),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -22,8 +30,6 @@ class PizzaDetails extends StatelessWidget {
             ),
             onPressed: () => context.go('/'),
           ),
-          centerTitle: true,
-          title: Text(currentPizza.name),
         ),
         body: Center(
           child: Column(children: <Widget>[
@@ -35,6 +41,18 @@ class PizzaDetails extends StatelessWidget {
                   width: 150,
                   height: 150,
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () => likes.toggleLiked(currentPizza),
+                  icon: Icon(
+                    Icons.favorite,
+                    color: colorLike,
+                  ),
+                )
               ],
             ),
             Padding(

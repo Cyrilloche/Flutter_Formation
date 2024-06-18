@@ -1,7 +1,11 @@
+import 'package:easypizza/classes/cart_provider.dart';
+import 'package:easypizza/classes/likes_provider.dart';
+import 'package:easypizza/screens/cart_details.dart';
 import 'package:easypizza/screens/pizza_details.dart';
 import 'package:easypizza/screens/pizzas_master.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   final router = GoRouter(
@@ -21,10 +25,29 @@ void main() {
           final id = state.pathParameters['id']!;
           return PizzaDetails(id: id);
         },
-      )
+      ),
+      GoRoute(
+        name: 'cart',
+        path: '/cart',
+        builder: (BuildContext context, GoRouterState state) {
+          return const CartDetails();
+        },
+      ),
     ],
   );
-  runApp(MyApp(router: router));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LikesProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+      ],
+      child: MyApp(router: router),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

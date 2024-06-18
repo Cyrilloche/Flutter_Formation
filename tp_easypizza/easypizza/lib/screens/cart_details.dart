@@ -1,20 +1,18 @@
 import 'package:easypizza/classes/cart_provider.dart';
-import 'package:easypizza/classes/likes_provider.dart';
 import 'package:easypizza/models/pizza.dart';
 import 'package:flutter/material.dart';
-import 'package:easypizza/data/pizzas.dart' as db;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PizzasMaster extends StatelessWidget {
-  const PizzasMaster({super.key});
+class CartDetails extends StatelessWidget {
+  const CartDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final likes = context.watch<LikesProvider>();
     final cart = context.watch<CartProvider>();
+
     return MaterialApp(
-      title: 'EasyPizza',
+      title: 'Carello',
       home: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
@@ -22,42 +20,30 @@ class PizzasMaster extends StatelessWidget {
             fontSize: 28.0,
           ),
           centerTitle: true,
-          title: const Text('Pizza della mama'),
+          title: const Text('Carello'),
           flexibleSpace: const Image(
             image: AssetImage('assets/images/appbar_background.png'),
             fit: BoxFit.cover,
           ),
-          actions: [
-            IconButton(
-              tooltip: "Cart",
-              onPressed: () => context.goNamed('cart'),
-              icon: Badge(
-                isLabelVisible: true,
-                label: Text(cart.numberOfPizza.toString()),
-                offset: const Offset(8, 8),
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                child: const Icon(
-                  IconData(0xe59a, fontFamily: 'MaterialIcons'),
-                  size: 25,
-                ),
-              ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
             ),
-          ],
+            onPressed: () => context.go('/'),
+          ),
         ),
         body: Center(
           child: ListView.builder(
-            itemCount: db.pizzas.length,
+            itemCount: cart.cart.length,
             itemBuilder: (BuildContext context, int index) {
-              final Pizza currentPizza = db.pizzas[index];
-              final String currentId = index.toString();
-              final Color colorLike =
-                  likes.isLiked(currentPizza) ? Colors.red : Colors.grey;
+              final Pizza currentPizza = cart.cart[index];
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () => context.goNamed(
                     'details',
-                    pathParameters: {'id': currentId},
+                    pathParameters: {'id': currentPizza.id},
                   ),
                   child: Row(
                     children: [
@@ -94,16 +80,6 @@ class PizzasMaster extends StatelessWidget {
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),
-                      Icon(
-                        Icons.favorite,
-                        color: colorLike,
-                      ),
-                      IconButton(
-                        onPressed: () => cart.add(currentPizza),
-                        icon: const Icon(
-                          IconData(0xf538, fontFamily: 'MaterialIcons'),
-                        ),
-                      )
                     ],
                   ),
                 ),
